@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is This Opportunity Right For Me? — Calyx & Core</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F3EE;
+    --cream-dark: #EDE7DC;
+    --ink: #1C1C1A;
+    --ink-light: #4A4845;
+    --green: #2D4A3E;
+    --green-light: #3D6155;
+    --green-pale: #EAF0EC;
+    --gold: #B8935A;
+    --gold-light: #D4AF80;
+    --border: #D9D0C4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 80%, rgba(45,74,62,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(184,147,90,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  .brand {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-mark::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  /* ── INTRO SCREEN ── */
+  #intro {
+    text-align: center;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .intro-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+  }
+
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .intro-title em {
+    font-style: italic;
+    color: var(--green);
+  }
+
+  .intro-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+  }
+
+  .intro-body {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-light);
+    max-width: 500px;
+    margin: 0 auto 40px;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 32px;
+  }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 16px 36px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+  }
+
+  .btn-start:hover {
+    background: var(--green-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(45,74,62,0.2);
+  }
+
+  .btn-start svg {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-start:hover svg {
+    transform: translateX(3px);
+  }
+
+  .intro-note {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--ink-light);
+    opacity: 0.6;
+  }
+
+  /* ── PROGRESS ── */
+  #quiz-screen { display: none; }
+
+  .progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    opacity: 0.7;
+  }
+
+  .progress-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--green);
+  }
+
+  .progress-bar-wrap {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 48px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── QUESTION ── */
+  .question-wrap {
+    animation: fadeUp 0.45s ease both;
+  }
+
+  .question-category {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 36px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .option-btn:hover {
+    border-color: var(--green);
+    background: var(--green-pale);
+    transform: translateX(4px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--green);
+    background: var(--green-pale);
+  }
+
+  .option-marker {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s ease;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-light);
+    opacity: 0.5;
+  }
+
+  .option-btn:hover .option-marker,
+  .option-btn.selected .option-marker {
+    border-color: var(--green);
+    background: var(--green);
+    color: white;
+    opacity: 1;
+  }
+
+  .option-label {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    padding-top: 2px;
+  }
+
+  .option-btn.selected .option-label {
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .btn-next {
+    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .btn-next.visible {
+    opacity: 1;
+    pointer-events: all;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .btn-next:hover {
+    background: var(--green-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(45,74,62,0.2);
+  }
+
+  /* ── RESULTS ── */
+  #result-screen { display: none; }
+
+  .result-wrap {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .result-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .result-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .result-path-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 28px;
+  }
+
+  .result-body {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ink-light);
+    margin-bottom: 36px;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+  }
+
+  .result-actions-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .action-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .action-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .action-dot {
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 8px;
+  }
+
+  .score-bar-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 36px;
+  }
+
+  .score-bar-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    opacity: 0.7;
+    margin-bottom: 18px;
+  }
+
+  .score-dimension {
+    margin-bottom: 14px;
+  }
+
+  .score-dimension:last-child { margin-bottom: 0; }
+
+  .score-dimension-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+
+  .score-dimension-bar {
+    height: 4px;
+    background: var(--cream-dark);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-dimension-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+
+  .cta-box {
+    background: var(--green);
+    color: var(--cream);
+    padding: 28px 32px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+
+  .cta-box-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .cta-box-body {
+    font-size: 13px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin-bottom: 20px;
+  }
+
+  .cta-box-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .cta-box-btn:hover { background: var(--gold-light); }
+
+  .btn-retake {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--ink-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 10px 0;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  .btn-retake:hover { opacity: 1; }
+
+  /* ── RESULT THEMES ── */
+  .theme-commit .result-tag { background: #E8F2EC; color: var(--green); }
+  .theme-commit .result-headline { color: var(--green); }
+  .theme-experiment .result-tag { background: #FEF5E7; color: #8B6914; }
+  .theme-experiment .result-headline { color: #5C4A1E; }
+  .theme-evidence .result-tag { background: #EAF0F6; color: #2C5282; }
+  .theme-evidence .result-headline { color: #2C5282; }
+  .theme-pause .result-tag { background: #F9EFEF; color: #8B2E2E; }
+  .theme-pause .result-headline { color: #6B2424; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease forwards;
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-12px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- BRAND HEADER -->
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-mark"></div>
+      <span class="brand-name">Calyx &amp; Core</span>
+    </div>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <div id="intro">
+    <div class="intro-tag">Self-Assessment</div>
+    <h1 class="intro-title">Is this opportunity<br><em>right for you?</em></h1>
+    <p class="intro-subtitle">A structured lens — before you decide.</p>
+    <div class="divider"></div>
+    <p class="intro-body">
+      Most career mistakes happen when we move before we have enough evidence. This short quiz helps you assess whether an opportunity genuinely fits — your identity, your energy, your risk appetite, and where you are right now.
+    </p>
+    <button class="btn-start" onclick="startQuiz()">
+      Begin the assessment
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <p class="intro-note">8 questions · 3 minutes · No email required</p>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen">
+    <div class="progress-header">
+      <span class="progress-label">Your Assessment</span>
+      <span class="progress-count" id="progress-count">1 of 8</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-bar" style="width: 12.5%"></div>
+    </div>
+    <div id="question-container"></div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen">
+    <div class="result-wrap" id="result-content"></div>
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    {
+      category: "Financial Stability",
+      text: "How secure is your financial foundation right now?",
+      options: [
+        { label: "I have a stable income and some runway — I can afford to explore.", score: { stability: 3, risk: 2 } },
+        { label: "I'm currently between roles, but I have savings to support me for a while.", score: { stability: 2, risk: 1 } },
+        { label: "I need income urgently — I don't have much runway.", score: { stability: 1, risk: 0 } },
+        { label: "I have multiple income streams already — this would be in addition.", score: { stability: 3, risk: 3 } },
+      ]
+    },
+    {
+      category: "Identity Fit",
+      text: "When you picture yourself doing this work day-to-day, what do you honestly feel?",
+      options: [
+        { label: "Genuinely energised — this is the kind of problem I want to solve.", score: { identity: 3, energy: 3 } },
+        { label: "Curious and open, but I'm not fully sure yet.", score: { identity: 2, energy: 2 } },
+        { label: "It pays well or looks good — but I can't say it excites me.", score: { identity: 1, energy: 1 } },
+        { label: "It feels like a step backward or sideways from who I'm becoming.", score: { identity: 0, energy: 0 } },
+      ]
+    },
+    {
+      category: "Environment Fit",
+      text: "How well does the environment — the team, culture, pace — match how you do your best work?",
+      options: [
+        { label: "It feels like a natural fit for my rhythm and working style.", score: { identity: 3, energy: 3 } },
+        { label: "I think I could adapt, though it's not my ideal environment.", score: { identity: 2, energy: 1 } },
+        { label: "I honestly don't know enough about the environment to say.", score: { identity: 1, energy: 1 } },
+        { label: "It feels like it would drain me more than it gives.", score: { identity: 0, energy: 0 } },
+      ]
+    },
+    {
+      category: "Risk Appetite",
+      text: "How would you describe your appetite for risk right now?",
+      options: [
+        { label: "High — I'm ready to try something new, even if it pays less initially.", score: { risk: 3, stability: 2 } },
+        { label: "Moderate — I'm open to change, but I need some stability alongside it.", score: { risk: 2, stability: 2 } },
+        { label: "Low — I need security first, and I'll experiment from there.", score: { risk: 1, stability: 3 } },
+        { label: "Very low — this isn't the right time to be taking on uncertainty.", score: { risk: 0, stability: 3 } },
+      ]
+    },
+    {
+      category: "Evidence & Testing",
+      text: "Have you had any real exposure to this kind of work — even informally?",
+      options: [
+        { label: "Yes — I've done parts of it and know it suits me.", score: { evidence: 3 } },
+        { label: "Somewhat — I've been adjacent to it, but haven't fully experienced it.", score: { evidence: 2 } },
+        { label: "No — but I have a strong instinct about it.", score: { evidence: 1 } },
+        { label: "No — and I realise I'm making this decision without much evidence.", score: { evidence: 0 } },
+      ]
+    },
+    {
+      category: "Learning & Growth",
+      text: "What does this opportunity offer in terms of learning?",
+      options: [
+        { label: "It will push me in directions I genuinely want to grow.", score: { energy: 3, identity: 2 } },
+        { label: "There's some learning, but it's not the main draw.", score: { energy: 2, identity: 1 } },
+        { label: "I'd be applying existing skills more than building new ones.", score: { energy: 1, identity: 1 } },
+        { label: "I think I'd plateau quickly — there's not much room to grow.", score: { energy: 0, identity: 0 } },
+      ]
+    },
+    {
+      category: "Purpose & Motivation",
+      text: "Do you understand the deeper problem this work is solving — and does it matter to you?",
+      options: [
+        { label: "Yes — I'm genuinely drawn to the problem, not just the role.", score: { identity: 3, energy: 3 } },
+        { label: "I understand it, but I'm not strongly connected to it.", score: { identity: 1, energy: 2 } },
+        { label: "Honestly, I haven't thought much about the underlying problem.", score: { identity: 1, energy: 1 } },
+        { label: "I'm not sure the problem is one I care about long-term.", score: { identity: 0, energy: 1 } },
+      ]
+    },
+    {
+      category: "The Bigger Picture",
+      text: "If you stepped back from title and salary — does this role genuinely suit who you are becoming?",
+      options: [
+        { label: "Yes — it feels aligned with my core identity and direction.", score: { identity: 3, evidence: 2 } },
+        { label: "Mostly — there are some compromises, but it broadly fits.", score: { identity: 2, evidence: 1 } },
+        { label: "I'm choosing it for practical reasons more than fit.", score: { identity: 1, evidence: 1 } },
+        { label: "Probably not — but I'm not sure I have better options right now.", score: { identity: 0, evidence: 0 } },
+      ]
+    }
+  ];
+
+  const results = {
+    commit: {
+      theme: 'theme-commit',
+      tag: '✦ Strong Signal',
+      headline: 'This opportunity deserves your commitment.',
+      path: 'The Confident Path',
+      body: `The evidence points in one direction. This opportunity aligns with who you are, suits your environment, and matches your risk appetite. You're not guessing — you have enough to go on.\n\nThat said, committing doesn't mean abandoning your judgment. Move forward with clear eyes — know what you're optimising for, what you're trading off, and what you'd need to see in the first 90 days to feel certain you made the right call.`,
+      actions: [
+        "Define what success looks like at 30, 60, and 90 days before you start.",
+        "Name the one trade-off this requires — and make peace with it deliberately, not by accident.",
+        "Stay anchored to the problem you're solving, not just the role itself.",
+        "Build early relationships with the people whose judgment you'll rely on."
+      ],
+      scores_label: "How you scored across each dimension",
+      cta: "Thinking about what comes next? Let's map it out properly."
+    },
+    experiment: {
+      theme: 'theme-experiment',
+      tag: '◈ Explore First',
+      headline: 'Worth testing — before you fully commit.',
+      path: 'The Experiment Path',
+      body: `There's something real here. The fit is genuine enough to pursue — but you don't yet have enough evidence to go all-in. The smart move is to design a structured experiment: do enough of the actual work to feel the difference, before a formal commitment is on the table.\n\nYou can still pursue stability alongside this. Run the experiment in the margins of what you're already doing. A few weeks of real exposure will tell you more than months of thinking about it.`,
+      actions: [
+        "Identify one concrete thing you can do to simulate this role in the next two weeks.",
+        "Find someone already doing this work — not for advice, but for a reality check.",
+        "Set a decision date. Give yourself a defined window to gather evidence, then decide.",
+        "Keep your financial base secure while you explore — don't give yourself artificial urgency."
+      ],
+      scores_label: "Where you're strong — and where you need more data",
+      cta: "Want help designing your experiment? A strategy session is a good place to start."
+    },
+    evidence: {
+      theme: 'theme-evidence',
+      tag: '◎ Build the Case',
+      headline: 'You need more evidence before you decide.',
+      path: 'The Evidence Path',
+      body: `This isn't a no — it's a not yet. Right now, you're making a significant decision on incomplete information. That's the fastest route to a move you'll want to reverse in six months.\n\nThe good news: evidence is buildable. You don't need certainty — you need enough data to make a reasoned call. That means doing some version of the work before committing to all of it. Start small, stay curious, and make a decision from signal rather than assumption.`,
+      actions: [
+        "Before anything else — clarify what environment you do your best work in. That's the filter.",
+        "Don't leap. Run a small, low-stakes version of this work to test your instinct.",
+        "Map out your three options: a neutral path, an ambitious path, a conservative path. Which does this opportunity fit?",
+        "Talk to someone who has made a similar move. Not for permission — for data."
+      ],
+      scores_label: "The gaps worth addressing before you commit",
+      cta: "A structured strategy session can help you map the evidence you actually need."
+    },
+    pause: {
+      theme: 'theme-pause',
+      tag: '○ Not Right Now',
+      headline: 'This may not be the right opportunity — or the right moment.',
+      path: 'The Clarity Path',
+      body: `Something here isn't aligned — and that matters. It might be the timing, the fit, or simply that this opportunity is the right shape in the wrong season. Moving forward without addressing that is unlikely to end well.\n\nThis isn't a closed door. It's an invitation to get clearer on what you actually need: the environment that suits your energy, the problem you genuinely want to solve, the kind of work that gives back as much as it takes. Get that clarity first. The right opportunity will be easier to recognise once you have it.`,
+      actions: [
+        "Pause before deciding. The urgency you feel is real — but urgency is not a strategy.",
+        "Do the identity work first: what kind of environment lets you do your best work?",
+        "Separate 'I need income' from 'I want this role' — they may need different solutions.",
+        "Consider whether a neutral or conservative path could give you the stability to pursue something better in parallel."
+      ],
+      scores_label: "What the signals are telling you",
+      cta: "Clarity before commitment. That's always the right sequence."
+    }
+  };
+
+  let current = 0;
+  let answers = [];
+  let scores = { identity: 0, energy: 0, stability: 0, risk: 0, evidence: 0 };
+
+  function startQuiz() {
+    document.getElementById('intro').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+      renderQuestion();
+    }, 300);
+  }
+
+  function renderQuestion() {
+    const q = questions[current];
+    const container = document.getElementById('question-container');
+
+    const html = `
+      <div class="question-wrap">
+        <div class="question-category">${q.category}</div>
+        <p class="question-text">${q.text}</p>
+        <div class="options-grid">
+          ${q.options.map((opt, i) => `
+            <button class="option-btn" onclick="selectOption(this, ${i})" data-index="${i}">
+              <div class="option-marker">${String.fromCharCode(65 + i)}</div>
+              <span class="option-label">${opt.label}</span>
+            </button>
+          `).join('')}
+        </div>
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+          ${current < questions.length - 1 ? 'Continue' : 'See my results'}
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    `;
+
+    container.innerHTML = html;
+    updateProgress();
+  }
+
+  function selectOption(btn, index) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[current] = index;
+    document.getElementById('btn-next').classList.add('visible');
+  }
+
+  function nextQuestion() {
+    if (answers[current] === undefined) return;
+
+    // Accumulate scores
+    const chosen = questions[current].options[answers[current]].score;
+    for (const [key, val] of Object.entries(chosen)) {
+      scores[key] = (scores[key] || 0) + val;
+    }
+
+    if (current < questions.length - 1) {
+      const container = document.getElementById('question-container');
+      container.querySelector('.question-wrap').classList.add('fade-out');
+      setTimeout(() => {
+        current++;
+        renderQuestion();
+      }, 280);
+    } else {
+      showResults();
+    }
+  }
+
+  function updateProgress() {
+    const pct = ((current + 1) / questions.length) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-count').textContent = `${current + 1} of ${questions.length}`;
+  }
+
+  function showResults() {
+    document.getElementById('quiz-screen').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('quiz-screen').style.display = 'none';
+
+      // Determine result
+      const total = scores.identity + scores.energy + scores.stability + scores.risk + scores.evidence;
+      const maxPossible = 46;
+      const pct = total / maxPossible;
+
+      let resultKey;
+      const evidenceStrong = scores.evidence >= 4;
+      const identityStrong = scores.identity >= 6;
+      const energyStrong = scores.energy >= 5;
+      const stabilityOk = scores.stability >= 3;
+
+      if (pct >= 0.68 && identityStrong && evidenceStrong) {
+        resultKey = 'commit';
+      } else if (pct >= 0.48 && (identityStrong || energyStrong)) {
+        resultKey = 'experiment';
+      } else if (pct >= 0.32 || stabilityOk) {
+        resultKey = 'evidence';
+      } else {
+        resultKey = 'pause';
+      }
+
+      const r = results[resultKey];
+      const maxDim = 9;
+
+      const dims = [
+        { label: 'Identity Fit', key: 'identity', max: 12, color: '#2D4A3E' },
+        { label: 'Energy & Environment', key: 'energy', max: 12, color: '#3D6155' },
+        { label: 'Evidence & Testing', key: 'evidence', max: 5, color: '#B8935A' },
+        { label: 'Stability & Risk', key: 'risk', max: 9, color: '#8B6914' },
+      ];
+
+      const bodyLines = r.body.split('\n\n').map(l => `<p>${l}</p>`).join('');
+
+      document.getElementById('result-content').innerHTML = `
+        <div class="${r.theme}">
+          <div class="result-tag">${r.tag}</div>
+          <h2 class="result-headline">${r.headline}</h2>
+          <p class="result-path-label">${r.path}</p>
+          <div class="result-body">${bodyLines}</div>
+
+          <div class="score-bar-section">
+            <div class="score-bar-title">${r.scores_label}</div>
+            ${dims.map(d => {
+              const val = Math.min(scores[d.key] || 0, d.max);
+              const pct = Math.round((val / d.max) * 100);
+              return `
+                <div class="score-dimension">
+                  <div class="score-dimension-label">
+                    <span>${d.label}</span>
+                    <span>${pct}%</span>
+                  </div>
+                  <div class="score-dimension-bar">
+                    <div class="score-dimension-fill" style="width: 0%; background: ${d.color};" data-target="${pct}"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="result-actions-title">What to do next</div>
+          <ul class="action-list">
+            ${r.actions.map(a => `
+              <li><div class="action-dot"></div><span>${a}</span></li>
+            `).join('')}
+          </ul>
+
+          <div class="cta-box">
+            <div class="cta-box-title">Not sure what your next move should be?</div>
+            <div class="cta-box-body">${r.cta} A strategy session with Michelle maps your identity, your paths, and your first experiment — so you move from evidence, not hope.</div>
+            <a href="https://calyx-and-core.com" class="cta-box-btn" target="_blank">
+              Book a strategy session
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+
+          <button class="btn-retake" onclick="retake()">← Retake the assessment</button>
+        </div>
+      `;
+
+      document.getElementById('result-screen').style.display = 'block';
+
+      // Animate score bars
+      setTimeout(() => {
+        document.querySelectorAll('.score-dimension-fill').forEach(el => {
+          el.style.width = el.dataset.target + '%';
+        });
+      }, 200);
+
+    }, 350);
+  }
+
+  function retake() {
+    current = 0;
+    answers = [];
+    scores = { identity: 0, energy: 0, stability: 0, risk: 0, evidence: 0 };
+
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('quiz-screen').style.display = 'block';
+    renderQuestion();
+  }
+</script>
+</body>
+</html>
